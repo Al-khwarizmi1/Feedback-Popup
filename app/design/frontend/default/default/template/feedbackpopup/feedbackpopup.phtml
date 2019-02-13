@@ -1,0 +1,336 @@
+<?php
+
+$request = $this->getRequest();
+$module = $request->getModuleName();
+$controller = $request->getControllerName();
+$currentPage = '';
+if(Mage::getSingleton('cms/page')->getIdentifier() == 'home')
+{
+    $currentPage = "home";
+}
+elseif(Mage::registry('current_product'))
+{
+    $currentPage = "product";
+}
+elseif(Mage::registry('current_category'))
+{
+    $currentPage = "category";
+}
+elseif($controller == 'account')
+{
+    $currentPage = "account";
+}
+elseif($module == 'cms')
+{
+    $currentPage = "cms";
+}
+elseif($controller == 'cart')
+{
+    $currentPage = "cart";
+}
+elseif($controller == 'onepage')
+{
+    $currentPage = "onepage";
+}
+
+$topPosition = Mage::getStoreConfig('feedbackpopup/feedbackpopup/top_position');
+$store_id = Mage::app()->getStore()->getStoreId();
+?>
+
+<script type="text/javascript">
+    var noc=jQuery.noConflict(true);
+    var popupShow = true;
+     var closePopup;
+ 
+
+noc(document).ready(function(){
+        var maxHeight = 0;
+		var setTop = <?php echo $topPosition; ?>;
+		if ( noc.browser.msie ) {
+       var setTop = setTop - 185;
+	   
+		}
+		
+
+   noc('.popbutton')
+    .each(function(index) {
+        noc(this).css('top', setTop);
+		noc("#cursorie"+(index)).css("top",setTop);
+		 if ( noc.browser.msie ) {
+		maxHeight = noc("#link_feedback"+(index)).outerHeight();
+		setTop +=  maxHeight + 30;
+		noc("#cursorie"+(index)).css("height",maxHeight);
+		 }
+		 else
+		 {
+		noc(this).css('top', setTop);
+        maxHeight = noc("#link_feedback"+(index+1)).outerWidth();
+		setTop += maxHeight + 30;		
+		 }
+      
+    })
+
+
+    
+        noc(".trigger,.trigger1").click(function(){
+            
+           popupShow = false;
+            
+           
+          var divId = noc(this).attr("id");
+          var element = divId.split('link_feedback'); 
+		  if(element.length == 1)
+		  {
+			   var divId = noc(this).attr("id");
+          var element = divId.split('cursorie');
+		  }
+
+           var showpanel = "#feedback_information"+element[1];
+            
+            
+            noc(showpanel).show("fast");
+            noc(".trigger").css("display","none");
+            noc(".popuptrigger").css("display","none");
+
+        });
+        noc(".closepanel").click(function () {
+             popupShow = true;
+            noc(".panel").hide("fast");
+            noc(".trigger").css("display","block");
+            noc(".popuptrigger").css("display","block");
+        });
+
+    });
+
+function cleartimer()
+{
+    clearTimeout(closePopup);
+}
+
+
+</script>
+
+
+<?php
+$fname = '';
+$lname = '';
+$email = '';
+$phoneno = '';
+$todayDate = strtotime(Mage::app()->getLocale()->date()->toString(Varien_Date::DATETIME_INTERNAL_FORMAT));
+$todayDate = date('m/d/y', $todayDate);
+
+$result = Mage::getModel('feedbackpopup/feedbackpopup')->getCollection()
+        ->addFieldToFilter('status', array('eq' => 1))
+        ->addFieldToFilter('options_type', array('nin' => 2))
+        ->addStoreFilter($store_id);
+$notificationResult = Mage::getModel('feedbackpopup/feedbackpopup')->getCollection()
+        ->addFieldToFilter('status', array('eq' => 1))
+        ->addFieldToFilter('options_type', array('in' => 2))
+        ->addFieldToFilter('show_at', array('like' => "%" .$currentPage . "%"))
+        ->addFieldToFilter('todate', array('or' => array(0 => array('date' => true, 'from' => $todayDate),
+                1 => array('is' => new Zend_Db_Expr('null')))
+                ), 'left');
+ 
+$notificationResult->addStoreFilter($store_id);
+$notificationResult->getSelect()->order(new Zend_Db_Expr('RAND()'));
+$notificationResult->getSelect()->limit(1);
+
+$config = Mage::getStoreConfig('feedbackpopup/feedbackpopup/active');
+
+$customer = Mage::helper('customer');
+if ($customer->isLoggedIn()) {
+    $name = Mage::getSingleton('customer/session')->getCustomer()->getName();
+    $email = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
+}
+?>
+
+<?php if ($config == "1") { ?>
+    <?php
+    $i = 0;
+
+    foreach ($result as $content) {
+        $class = '';
+
+
+        if ($content->getDisplayeffect() == 1) {
+            $class = 'class = "trigger popbutton"';
+			$class1 = 'class = "trigger1 proxy-link"';
+            $clickFunction = 'onclick="cleartimer();"';
+        } else {
+            $class = 'class = "popuptrigger popbutton"';
+			$class1 = 'class = "proxy-link"';
+            $clickFunction = 'onclick="cleartimer(); openFeedbackWindow(\'feedback_information' . $i . '\');"';
+        }
+        if ($i == 0) {
+            ?>
+
+            <div id="side-feedback"  class="side-feedback left">
+            <?php
+        }
+        ?>
+           
+                <a href="javascript:void(0)"  <?php echo $class; ?> <?php echo $clickFunction; ?> title="<?php echo $content->getTitle(); ?>" id="link_feedback<?php echo $i; ?>">
+                  <?php echo $content->getTitle(); ?> 
+                   
+                </a>
+                <a <?php echo $class1; ?> style="width:34px;"  href="javascript:void(0);" <?php echo $clickFunction; ?>  id="cursorie<?php echo $i; ?>" >  </a>
+           
+            <?php if ($i == count($result) - 1) { ?>
+
+            </div>
+
+            <div id="backgroundpopup" class="background-opacity" style="display: none; background: none repeat scroll 0% 0% rgb(0, 0, 0);"></div> 
+            <?php
+        }
+        $i++;
+    }
+    $i = 0;
+    foreach ($result as $content) {
+        $class = '';
+
+        if ($content->getDisplayeffect() == 1) {
+            $class = 'panel';
+            $closeClass = "closepanel";
+            $clickFunction = '';
+        } else {
+            $class = 'feedback-container';
+            $closeClass = "feedback_close";
+            $clickFunction = 'onclick="closeFeedbackWindow(\'feedback_information' . $i . '\'); return false;"';
+        }
+        if ($content->getOptionsType() == 1) {
+            ?>
+            <div style="display: none;"  id="feedback_information<?php echo $i; ?>" class="<?php echo $class; ?>">
+                <a class="<?php echo $closeClass; ?>" title="close" href="#" <?php echo $clickFunction; ?> ></a>
+                <div class="feedback-popup-content">
+                    <div class="feedback-title"> <?php echo $content->getTitle(); ?>  </div>
+                    <div class="feedback-content">
+                        <form action="<?php echo $this->getUrl("feedbackpopup/index/post") ?>" method="post" id="frm_feedback<?php echo $i; ?>">
+                            <div id="success_message<?php echo $i; ?>" style="display: none;" class="feedback-success-msg"></div>
+                            <div id="loader<?php echo $i; ?>" class="loader-feedback" style="text-align: center;display: none;"><p><img src='<?php echo $this->getSkinUrl('feedbackpopup/images/ajax-loader-onestep.gif') ?>' alt='' title=''/></p></div>
+                           
+                            <ul class="form-list" id="feedback_options">
+                                <li>
+                                    <label for="fname"><?php echo $this->__('Your First Name') . ":" ?> <span class="required">*</span></label>
+                                    <input name="firstname" value="<?php echo $this->htmlEscape($fname) ?>" title="<?php echo $this->__('Name') ?>" id="fname" type="text" class="input-text required-entry"  />
+                                </li>
+                                <li>
+                                    <label for="lastname"><?php echo $this->__('Your Last  Name') . ":" ?> <span class="required">*</span></label>
+                                    <input name="lastname" value="<?php echo $this->htmlEscape($lname) ?>" title="<?php echo $this->__('Name') ?>" id="lname" type="text" class="input-text required-entry"  />
+                                </li>
+                                <li>      
+                                    <label for="email"><?php echo $this->__('Your E-mail') . ":" ?> <span class="required">*</span></label>
+                                    <input name="feedbackmail" value="<?php echo $this->htmlEscape($email) ?>" title="<?php echo $this->__('Email Address') ?>" id="email" type="text" class="input-text required-entry validate-email" />
+                                </li> 
+                               <?php if($content->getEnablephonefield() == 1){ ?>
+                                 <li>      
+                                    <label for="phonenumber"><?php echo $this->__('Your Phone Number') . ":" ?> <span class="required">*</span></label>
+                                    <input name="phonenumber" value="<?php echo $this->htmlEscape($phoneno) ?>" title="<?php echo $this->__('Phone Number') ?>" id="phonenumber" type="text" class="input-text required-entry " />
+                                </li> 
+                                <?php }?>
+                                <?php if($content->getEnableaddressfield() == 1){ ?>
+                                 <li>      
+                                    <label for="address"><?php echo $this->__('Your Address') . ":" ?> <span class="required">*</span></label>
+                                    <input name="address" value="<?php echo $this->htmlEscape($address) ?>" title="<?php echo $this->__('Your Address') ?>" id="address" type="text" class="input-text required-entry " />
+                                </li> 
+                                 <?php }?>
+                                 <?php if($content->getHearAbout() == 1){ ?>
+                               
+                                
+                                <li>      
+                                    <label for="heard_about_us"><?php echo $this->__('Where did you hear about us') . "?" ?></label>
+                                    <input name="feedbackheard" value="" title="<?php echo $this->__('Email Address') ?>" id="heard_about_us" type="text" class="input-text" />
+                                </li> 
+                                <?php }?>
+                                <?php if($content->getEnablecomment() == 1){ ?>
+                                <li>
+                                    <label for="details"><?php echo $this->__('Details') . ":" ?> <span class="required">*</span></label>
+                                    <textarea id="details" class="input-text required-entry"  name="feedbackdetails" rows="10" col="50"></textarea>
+                                </li> 
+                                <?php }?>
+                              
+                                <li>
+                                    <input type ="hidden" name="receiveremail" value="<?php echo $content->getReceiveremail(); ?>" />
+                                    <button id="btnsubmit<?php echo $i; ?>" name="btnsubmit<?php echo $i; ?>"  type="button" class="button-feedback" onclick="sendFeedback(new Validation($('frm_feedback<?php echo $i; ?>')),'<?php echo $this->getUrl("feedbackpopup/index/post"); ?>','feedback_information<?php echo $i; ?>','frm_feedback<?php echo $i; ?>','btnsubmit<?php echo $i; ?>','loader<?php echo $i; ?>','success_message<?php echo $i; ?>')">
+                                        <span><span><?php echo $this->__('Submit') ?></span></span></button>
+                                </li>   
+                            </ul>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <?php
+        } else {
+            ?>
+            <div style="display: none;" id="feedback_information<?php echo $i; ?>" class="<?php echo $class; ?>">
+                <a class="<?php echo $closeClass; ?>" title="close" href="#" <?php echo $clickFunction; ?> ></a> <div class="feedback-popup-content">
+                    <div class="feedback-title"> <?php echo $content->getTitle(); ?>  </div>
+                    <div class="feedback-content">
+            <?php
+            $helper = Mage::helper('cms');
+            $processor = $helper->getPageTemplateProcessor();
+            $html = $processor->filter($content->getContentType());
+            echo $html;
+            ?>
+                    </div>
+                </div>
+            </div>
+                        <?php
+                    }
+                    $i++;
+                }
+
+                foreach ($notificationResult as $content) { 
+                    ?>
+        <div style="display: none;" id="feedback_information" class="feedback-container">
+            <a class="feedback_close" title="close" href="#" onclick="closeFeedbackWindow('feedback_information'); return false;"></a>
+            <div class="feedback-popup-content">
+                <div class="feedback-title"> <?php echo $content->getTitle(); ?>  </div>
+                <div class="feedback-content">
+        <?php
+        $helper = Mage::helper('cms');
+        $processor = $helper->getPageTemplateProcessor();
+        $html = $processor->filter($content->getContentType());
+        echo $html;
+        ?>
+                </div>
+            </div>
+        </div>
+  <!--Notification pop up script start -->          
+        <script type="text/javascript">
+            noc(document).ready(function(){
+                var startPopup = setTimeout(function(){ 
+        openFeedbackWindow('feedback_information')}, <?php echo $content->getStarttime()*1000; ?>); 
+    
+      closePopup = setTimeout(function(){ 
+        closeFeedbackWindow('feedback_information')}, <?php echo ($content->getStarttime()*1000 + $content->getClosetime()*1000); ?>); 
+     
+                });
+        </script>
+        <!--Notification pop up script start -->  
+    <?php }
+} ?>
+        <script type="text/javascript">
+            
+            noc( document ).on( 'keydown', function ( e ) {
+    if ( e.keyCode === 27 ) { // ESC
+         noc(".closepanel").trigger('click');
+         noc(".feedback_close").trigger('click');
+        }
+    });
+    noc('.closepanel').click(function(){
+        noc('div.validation-advice').remove();
+        noc('.required-entry').removeClass('validation-failed');
+        
+    });
+    noc('.feedback_close').click(function(){
+        noc('div.validation-advice').remove();
+        noc('.required-entry').removeClass('validation-failed');
+        
+    });
+ 
+ 
+            </script>
+        
+        

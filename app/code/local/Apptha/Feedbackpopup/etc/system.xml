@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Feedbackpopup frontend block
+ *
+ * @category   Apptha
+ * @package    Apptha_Feedbackpopup
+ * @author     Apptha Team <support@apptha.com>
+ * @copyright  Copyright (c) 2012 (www.apptha.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config> 
+    <tabs>
+        <Apptha translate="label" module="feedbackpopup">
+            <label>Apptha</label>
+            <sort_order>100</sort_order>
+        </Apptha>
+    </tabs>
+    <sections>
+        <feedbackpopup translate="label" module="feedbackpopup">
+            <label>Feedback Pop-up</label>
+            <sort_order>130</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>Apptha</tab>
+            <groups>
+                <feedbackpopup translate="label">
+                    <label>Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <top_position translate="label">
+                            <label>Display Top Position</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry validate-number</validate>
+                            <comment>Enter the value to position the button</comment>
+                        </top_position>
+                    </fields>
+
+                    <fields>
+                        <active translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Feedback Popup Module enable settings</comment>
+                        </active>
+                    </fields>
+                </feedbackpopup>
+            </groups>
+        </feedbackpopup>
+    </sections>
+</config>

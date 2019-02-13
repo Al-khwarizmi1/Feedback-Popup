@@ -1,0 +1,110 @@
+<?php
+/**
+ * FeedbackPopupd 
+ *
+ * @category   Apptha
+ * @package    Apptha_Feedbackpopup
+ * @author     Apptha Team <support@apptha.com>
+ * @copyright  Copyright (c) 2012 (www.apptha.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @version    0.1.0
+ */
+?>
+<?php 
+/**
+ * document.observe("dom:loaded", fucntion()),this function was used for listen to the events
+ * 
+ * dom:loaded was event to call at time loading page
+ * 
+ */
+
+?>
+<!--To SHOW AND HIDE THE FORM FIELDS END-->
+
+<?php
+$version = Mage::getVersion();
+if($version < '1.7.0.2'){
+    $head->addItem('js_css', 'prototype/windows/themes/magento.css');
+      ?>
+<?php }else{ 
+    
+    $head->addCss('lib/prototype/windows/themes/magento.css'); 
+    
+}?>
+
+
+<script type="text/javascript">
+    //<![CDATA[
+    document.observe("dom:loaded", function() {
+        displayfield();//call displayfield function to hide some fields at time add or edit form 
+        //This code runs as soon as possible once the DOM is available
+        $("options_type").observe('change', function(){
+            displayfield();//To hide and show fields based on options selected with out loadin teh whole page
+      
+        });
+    });
+    
+   //show and hide the fields 
+   
+    function displayfield()
+    {
+        //Condition for checking value is 1,then enable receiveremail
+        if($("options_type").value == 1){
+            //show fields
+            $("receiveremail").up('tr').show();          
+            $("enablephonefield").up('tr').show();
+            $("enableaddressfield").up('tr').show();
+            $("enablecomment").up('tr').show();
+            $("hear_about").up('tr').show();
+            //hide fields
+            $("fromdate").up('tr').hide();
+            $("show_at").up('tr').hide();
+            $("todate").up('tr').hide();
+            $("starttime").up('tr').hide();
+            $("closetime").up('tr').hide();
+            $("content_type").up('tr').hide();
+          
+        }
+        /*Condition for checking value is 2 ,then enable fromdate,
+         *todate,starttime,closetime,content field
+         */
+        else if($("options_type").value == 2){
+            //show fields
+            $("show_at").up('tr').show();
+            $("fromdate").up('tr').show();
+            $("todate").up('tr').show();
+            $("starttime").up('tr').show();
+            $("closetime").up('tr').show();
+            $("content_type").up('tr').show();
+            //hide fields
+            $("receiveremail").up('tr').hide();
+            $("enablephonefield").up('tr').hide();
+            $("enableaddressfield").up('tr').hide();
+            $("enablecomment").up('tr').hide();
+            $("hear_about").up('tr').hide();
+            
+          
+        }
+        /**
+         * If above both conditions are not satisified then it enables only content_type 
+         */
+        else{
+            //show fields
+            $("content_type").up('tr').show();
+             //hide fields
+            $("receiveremail").up('tr').hide();
+            $("show_at").up('tr').hide();
+            $("enablephonefield").up('tr').hide();
+            $("enableaddressfield").up('tr').hide();
+            $("enablecomment").up('tr').hide();
+            $("hear_about").up('tr').hide();
+            $("fromdate").up('tr').hide();
+            $("todate").up('tr').hide();
+            $("starttime").up('tr').hide();
+            $("closetime").up('tr').hide();
+        }
+      
+    }
+    //]]>
+</script>
+<!--To SHOW AND HIDE THE FORM FIELDS END-->

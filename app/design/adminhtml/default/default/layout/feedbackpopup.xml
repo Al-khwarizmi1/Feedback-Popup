@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+  * FeedbackPopupd 
+  *
+  * @category   Apptha
+  * @package    Apptha_Feedbackpopup
+  * @author     Apptha Team <support@apptha.com>
+  * @copyright  Copyright (c) 2012 (www.apptha.com)
+  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+  * @version    0.1.0
+  */
+-->
+<layout version="0.1.0">
+<!--
+Default layout, loads for calls the js files for content button show/hide editior
+-->
+    <default> 
+        <reference name="head">
+            <action method="setCanLoadExtJs">
+                <flag>1</flag>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/variables.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/wysiwyg/widget.js</script>
+            </action>
+            <action method="addJs">
+                <script>lib/flex.js</script>
+            </action>
+            <action method="addJs">
+                <script>lib/FABridge.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/flexuploader.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/browser.js</script>
+            </action>
+            <action method="addJs">
+                <script>prototype/window.js</script>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>prototype/windows/themes/default.css</name>
+            </action>
+            <action method="addCss">
+                <name>feedbackpopup/prototype/windows/themes/magento.css</name>
+            </action>
+        </reference>
+    </default>
+     <!--
+    Load the layout when you click on the menu
+   -->
+    <feedbackpopup_adminhtml_feedbackpopup_index>
+        <reference name="content">
+            <block type="feedbackpopup/adminhtml_feedbackpopup" name="feedbackpopup"></block>
+        </reference>
+    </feedbackpopup_adminhtml_feedbackpopup_index>
+    <!--
+    Load the layout when you click on the add / edit item
+    -->
+    <feedbackpopup_adminhtml_feedbackpopup_edit>
+    
+        <reference name="left">
+            <block type="adminhtml/template" template="feedbackpopup/feedbackpopup.phtml" name="feedbackpopup_jsinit"/>
+        </reference>
+
+    </feedbackpopup_adminhtml_feedbackpopup_edit>
+     
+</layout>

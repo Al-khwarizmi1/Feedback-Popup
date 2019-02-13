@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+* @category   Apptha
+* @package    Apptha_Feedbackpopup
+* @author     ModuleCreator
+* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+-->
+<config>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <feedbackpopup>
+                        <title>FeedBack Popup Module</title>
+                        <sort_order>10</sort_order>
+                    </feedbackpopup>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <feedbackpopup translate="title" module="feedbackpopup">
+                                        <title>FeedBack Pop-up</title>
+                                        <sort_order>100</sort_order>
+                                    </feedbackpopup>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    <feedbackpopup module="feedbackpopup">
+                        <title>FeedBack</title>
+                        <sort_order>30</sort_order>               
+                        <children>
+                            <items module="feedbackpopup">
+                                <title>Manage Pop-up</title>
+                                <sort_order>0</sort_order>
+                                <action>feedbackpopup/adminhtml_feedbackpopup</action>
+                            </items>
+                        </children>
+                    </feedbackpopup>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <layout>
+        <updates>
+            <feedbackpopup>
+                <file>feedbackpopup.xml</file>
+            </feedbackpopup>
+        </updates>
+    </layout>
+
+</config>

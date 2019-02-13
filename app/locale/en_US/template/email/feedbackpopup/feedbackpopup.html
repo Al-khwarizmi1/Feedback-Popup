@@ -1,0 +1,34 @@
+<!--@subject {{var store.getFrontendName()}}: Customer Feedback @-->
+<!--@vars
+{"var data.firstname":"Sender Name",
+"var data.lastname":"Sender Name",
+"var data.feedbackmail":"Sender Email",
+"var data.phonenumber":"Sender Phone number",
+"var data.address":"Sender Address",
+"var data.feedbackheard":"Where did you heard about us :",
+"var data.feedbackdetails":"Message"
+}
+@-->
+<ul>
+    <li style="list-style: none;"> <strong style="display: block; float: left; width: 150px;">Name:</strong> {{var data.firstname }} {{var data.lastname }}</li>
+
+ <li style="list-style: none;"> <strong style="display: block; float: left; width: 150px;">E-mail: </strong>{{var data.feedbackmail}}</li>
+
+{{if data.phonenumber}}
+ <li style="list-style: none;"> <strong style="display: block; float: left; width: 150px;">Phone number:</strong> {{var data.phonenumber}}</li>
+
+{{/if}}
+
+{{if data.address}}
+ <li style="list-style: none;"> <strong style="display: block; float: left; width: 150px;">Address:</strong> {{var data.address}}</li>
+
+{{/if}}
+
+{{if data.feedbackheard}}
+ <li style="list-style: none;"> <strong style="display: block; float: left; width: 150px;">Where did you heard about us: </strong>{{var data.feedbackheard}}</li>
+ <br/>
+{{/if}}
+{{if data.feedbackdetails}}
+ <li style="list-style: none;">  <div style="float:left;"><strong style="display: block; float: left; width: 150px;">Details:</strong><span style="float:left;width:500px">{{var data.feedbackdetails}}</span></div></li>
+{{/if}}
+</ul>

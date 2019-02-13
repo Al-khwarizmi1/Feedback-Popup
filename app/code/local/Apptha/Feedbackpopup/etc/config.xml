@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Feedbackpopup frontend block
+ *
+ * @category   Apptha
+ * @package    Apptha_Feedbackpopup
+ * @author     Apptha Team <support@apptha.com>
+ * @copyright  Copyright (c) 2012 (www.apptha.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Apptha_Feedbackpopup>
+            <version>0.1.0</version>
+        </Apptha_Feedbackpopup>
+    </modules>
+    <frontend>
+        <routers>
+            <feedbackpopup>
+                <use>standard</use>
+                <args>
+                    <module>Apptha_Feedbackpopup</module>
+                    <frontName>feedbackpopup</frontName>
+                </args>
+            </feedbackpopup>
+        </routers>
+        <layout>
+            <updates>
+                <feedbackpopup>
+                    <file>feedbackpopup.xml</file>
+                </feedbackpopup>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+            <feedbackpopup>
+                <use>admin</use>
+                <args>
+                    <module>Apptha_Feedbackpopup</module>
+                    <frontName>feedbackpopup</frontName>
+                </args>
+            </feedbackpopup>
+        </routers>
+    </admin>
+     <adminhtml>
+        <menu>
+            <feedbackpopup module="feedbackpopup">
+                <title>Feedback Pop-up</title>
+                <sort_order>80</sort_order>               
+                <children>
+                    <items module="feedbackpopup">
+                        <title>Manage Pop-up</title>
+                        <sort_order>0</sort_order>
+                        <action>feedbackpopup/adminhtml_feedbackpopup</action>
+                    </items>
+                </children>
+            </feedbackpopup>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <Apptha_Feedbackpopup>
+                                            <title>Feedback Popup</title>
+                                            <sort_order>10</sort_order>
+                                        </Apptha_Feedbackpopup>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <feedbackpopup>
+                    <file>feedbackpopup.xml</file>
+                </feedbackpopup>
+            </updates>
+        </layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <feedbackpopup>
+                <class>Apptha_Feedbackpopup_Model</class>
+                <resourceModel>feedbackpopup_mysql4</resourceModel>
+            </feedbackpopup>
+            <feedbackpopup_mysql4>
+                <class>Apptha_Feedbackpopup_Model_Mysql4</class>
+                <entities>
+                    <feedbackpopup>
+                        <table>feedbackpopup</table>
+                    </feedbackpopup>
+                     <feedbackpopup_store>
+                        <table>feedbackpopup_store</table>
+                    </feedbackpopup_store>
+                </entities>
+            </feedbackpopup_mysql4>
+            <feedbackpopup_adminhtml>
+                <class>Apptha_Feedbackpopup_Adminhtml_Model</class>
+            </feedbackpopup_adminhtml>
+        </models>
+        <resources>
+            <feedbackpopup_setup>
+                <setup>
+                    <module>Apptha_Feedbackpopup</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </feedbackpopup_setup>
+            <feedbackpopup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </feedbackpopup_write>
+            <feedbackpopup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </feedbackpopup_read>
+        </resources>
+     <template>
+        <email>
+            <feedbackpopup_email_template translate="label" module="feedbackpopup">
+                <label>Feedback Popup</label>
+                <file>feedbackpopup/feedbackpopup.html</file>
+                <type>html</type>
+            </feedbackpopup_email_template>
+        </email>
+    </template>   
+        <resources>
+            <feedbackpopup_setup>
+                <setup>
+                    <module>Apptha_Feedbackpopup</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </feedbackpopup_setup>
+            <feedbackpopup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </feedbackpopup_write>
+            <feedbackpopup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </feedbackpopup_read>
+        </resources>
+        <blocks>
+            <feedbackpopup>
+                <class>Apptha_Feedbackpopup_Block</class>
+            </feedbackpopup>
+        </blocks>
+        <helpers>
+            <feedbackpopup>
+                <class>Apptha_Feedbackpopup_Helper</class>
+            </feedbackpopup>
+        </helpers>
+    </global>
+</config>
